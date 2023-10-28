@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "solid-js": "^1.7.8"
+    "@hope-ui/solid": "^0.6.7",
+    "@stitches/core": "^1.2.8",
+    "esm-potrace-wasm": "^0.4.1",
+    "solid-js": "^1.7.8",
+    "solid-transition-group": "^0.0.10"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
