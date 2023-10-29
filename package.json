@@ -9,13 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@hope-ui/solid": "^0.6.7",
-    "@stitches/core": "^1.2.8",
     "esm-potrace-wasm": "^0.4.1",
-    "solid-js": "^1.7.8",
-    "solid-transition-group": "^0.0.10"
+    "solid-js": "^1.7.8"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-plugin-solid": "^2.7.0"
