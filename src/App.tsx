@@ -2,7 +2,8 @@ import { createSignal, onMount } from 'solid-js'
 import { potrace, init } from 'esm-potrace-wasm';
 
 function App() {
-  // const [count, setCount] = createSignal(0)
+  const [rasterImage, setRasterImage] = createSignal("");
+  const [vectorImage, setVectorImage] = createSignal("");
 
   onMount(async() => {
     await init();
@@ -11,26 +12,28 @@ function App() {
   const handleFile = async (e: Event) => {
     if (!e.target) return;
       const file_image = e.target.files[0];
-      const imgUrl = URL.createObjectURL(file_image)
+      const imgUrl = URL.createObjectURL(file_image);
       const blob = await fetch(imgUrl).then(res=>res.blob());
+
+      setRasterImage(imgUrl);
 
       const svg = await potrace(
         blob,
         {
-          turdsize: .50,
-          turnpolicy: 4,
-          alphamax: 1,
-          opticurve: 1,
-          opttolerance: 0.2,
-          pathonly: false,
-          extractcolors: true,
-          posterizelevel: 2, // [1, 255]
-          posterizationalgorithm: 1, // 0: simple, 1: interpolation
+          pathonly: false, // default false
+          extractcolors: true, // default true
+          
+          turdsize: 2, // default 2
+          turnpolicy: 4, // default 4
+          alphamax: 1, // default 1
+          opticurve: 1, // default 1
+          opttolerance: 0.2, // default 0.2
+          posterizelevel: 1, // [1, 255] // default 2
+          posterizationalgorithm: 0, // 0: simple, 1: interpolation default 0
         }
       );
 
-      document.querySelector('div#rasterImg').innerHTML = `<img src="${imgUrl}"/>`
-      document.querySelector('div#vectorImg').innerHTML = svg;
+      setVectorImage(svg);
   }
 
   return (
@@ -42,9 +45,53 @@ function App() {
       </div> 
 
       <div class="p-2 h-96 body grid grid-cols-2">
-        <div id="rasterImg"></div>
-        <div id="vectorImg"></div>
+        { rasterImage() &&
+          <div id="rasterImg" class="">
+            <h3>Original</h3>
+            <img src={ rasterImage() } alt="" />
+          </div>
+        }
+
+        { vectorImage() && 
+          <div id="vectorImg">
+            <h3>Vectored</h3>
+            <img src={`data:image/svg+xml;utf8,${encodeURIComponent( vectorImage() )}`} />
+          </div>
+        }
+
       </div> 
+      <div class="bg-slate-100 p-5">
+        <h3>Adjust Vector Image</h3>
+
+        <div>
+          <label class='block'>turdsize: </label>
+          <input class="w-1/4" type="range" min="1" max="100" value="50" />
+        </div>
+        <div class="">
+          <label class="block">turnpolicy: </label>
+          <input class="w-1/4" type="range" min="1" max="100" value="50" />
+        </div>
+        <div class="">
+          <label class="block">alphamax: </label>
+          <input class="w-1/4" type="range" min="1" max="100" value="50" />
+        </div>
+        <div class="">
+          <label class="block">opticurve: </label>
+          <input class="w-1/4" type="range" min="1" max="100" value="50" />
+        </div>
+        <div class="">
+          <label class="block">opttolerance: </label>
+          <input class="w-1/4" type="range" min="1" max="100" value="50" />
+        </div>
+        <div class="">
+          <label class="block">posterizelevel: </label>
+          <input class="w-1/4" type="range" min="1" max="100" value="50" />
+        </div>
+        <div class="">
+          <label class="block">posterizationalgorithm: </label>
+          <input class="w-1/4" type="range" min="1" max="100" value="50" />
+        </div>
+      </div>
     </div>
   )
 }
